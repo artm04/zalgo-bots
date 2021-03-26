@@ -1,0 +1,12 @@
+﻿1. Logging
+
+2. Telegram bot with function /zalgo and inline-mode
+
+3. Discord bot with function /zalgo and !zalgo
+
+
+1. Логирование
+
+2. Телеграм бот с функцией /zalgo и инлайн-режимом
+
+3. Дискорд бот с функцией /zalgo и !zalgo
