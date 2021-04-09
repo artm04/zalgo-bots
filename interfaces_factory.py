@@ -17,5 +17,32 @@ class TokenReader:
         return tokens_dict
 
 
-token_reader = TokenReader()
-token_reader.get_tokens()
+class InterfacesFactory:
+
+    def __init__(self):
+        self.telegram_tokens = []
+        self.discord_tokens = []
+        self.logger = None
+
+    def __read_tokens(self, token_reader: TokenReader):
+        tokens = token_reader.get_tokens()
+        self.telegram_tokens = tokens["telegram"]
+        self.discord_tokens = tokens["discord"]
+
+    def __create_interfaces(self):
+        for telegram_token in self.telegram_tokens:
+            pass
+            # telegram_bot = TelegramBot(telegram_token)
+            # telegram_bot.start()
+        for discord_token in self.discord_tokens:
+            pass
+            # discord_bot = DiscordBot(discord_token)
+            # discord_bot.start()
+
+    def run(self, token_reader: TokenReader):
+        self.__read_tokens(token_reader)
+        self.__create_interfaces()
+
+
+token_r = TokenReader()
+token_r.get_tokens()
