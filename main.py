@@ -5,7 +5,7 @@ class ZalgoText:
     def zalgofy(self, text: str) -> str:
         if "[" in text and "]" in text:
             return self.parse_zalgo(text)
-        return self.zalgofy(text)
+        return self.convert_to_zalgo(text)
 
     @staticmethod
     def convert_to_zalgo(text: str) -> str:
