@@ -42,6 +42,9 @@ class DiscordInterface(UserInterface):
                 else:
                     await message.channel.send(self.zalgo_text.zalgofy(message.content[6:]))
 
+            elif "private" in message.channel.type:  # DM. message.channel.type == "private" doesn't work
+                await message.channel.send(self.zalgo_text.zalgofy(message.content))
+
     def run(self):
         self.client.run(self.token)
 
