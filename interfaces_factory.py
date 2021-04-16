@@ -1,5 +1,6 @@
 import json
 from os.path import exists
+from user_interfaces import DiscordInterface, TelegramInterface
 
 
 class TokenReader:
@@ -29,20 +30,17 @@ class InterfacesFactory:
         self.telegram_tokens = tokens["telegram"]
         self.discord_tokens = tokens["discord"]
 
-    def __create_interfaces(self):
+    def __create_interfaces(self, logger, zalgo_text):
         for telegram_token in self.telegram_tokens:
-            pass
-            # telegram_bot = TelegramBot(telegram_token)
-            # telegram_bot.start()
+            telegram_bot = TelegramInterface(logger, zalgo_text, telegram_token)
+            telegram_bot.start()
         for discord_token in self.discord_tokens:
-            pass
-            # discord_bot = DiscordBot(discord_token)
-            # discord_bot.start()
+            discord_bot = DiscordInterface(logger, zalgo_text, discord_token)
+            discord_bot.start()
 
-    def run(self, token_reader: TokenReader):
+    def run(self, token_reader: TokenReader, logger, zalgo_text):
         self.__read_tokens(token_reader)
-        self.__create_interfaces()
+        self.__create_interfaces(logger, zalgo_text)
 
 
-token_r = TokenReader()
-token_r.get_tokens()
+
