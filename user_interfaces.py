@@ -2,9 +2,7 @@ from threading import Thread
 from abc import ABC, abstractmethod
 import discord
 import telebot
-from main import ZalgoText
-
-zalgo = ZalgoText()
+from zalgo import ZalgoText
 
 
 class UserInterface(Thread, ABC):
@@ -54,10 +52,13 @@ class TelegramInterface(UserInterface):
         super().__init__(logger, zalgo_text, token)
         self.client = telebot.TeleBot(token)
 
-        @self.client.message_handler(commands=['zalgofy'])
+        @self.client.message_handler(commands=['zalgo'])
         def zalgofy_command(message: telebot.types.Message):
-            source = telebot.util.extract_arguments(message.text)
-            self.client.reply_to(message, self.zalgo_text.zalgofy(source))
+            if message.text == "/zalgo":
+                self.client.reply_to(message, "Write text to be zalgofied after the /zalgo")
+            else:
+                source = telebot.util.extract_arguments(message.text)
+                self.client.reply_to(message, self.zalgo_text.zalgofy(source))
 
         @self.client.message_handler(func=lambda message: message.chat.type == 'private')
         def zalgofy_pm(message: telebot.types.Message):
