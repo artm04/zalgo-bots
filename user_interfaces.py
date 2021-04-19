@@ -1,7 +1,7 @@
 from threading import Thread
 from abc import ABC, abstractmethod
 import discord
-import telebot
+import aiogram
 from zalgo import ZalgoText
 
 
@@ -55,29 +55,32 @@ class TelegramInterface(UserInterface):
 
     def __init__(self, logger, zalgo_text, token: str):
         super().__init__(logger, zalgo_text, token)
-        self.client = telebot.TeleBot(token)
+        self.client = aiogram.Bot(token)
+        self.dp = aiogram.Dispatcher(self.client)
 
-        @self.client.message_handler(commands=['zalgo'])
-        def zalgofy_command(message: telebot.types.Message):
+        @self.dp.message_handler(commands=['zalgo'])
+        async def zalgofy(message: aiogram.types.Message):
             self.logger.log_to_console_and_file("Telegram: /zalgo")
-            if message.text == "/zalgo":
-                self.client.reply_to(message, "Write text to be zalgofied after the /zalgo")
+
+            if len(message.get_full_command()) > 1:
+                source = message.get_args()
+                await message.answer(self.zalgo_text.zalgofy(source))
             else:
-                source = telebot.util.extract_arguments(message.text)
-                self.client.reply_to(message, self.zalgo_text.zalgofy(source))
+                await message.answer("Write text to be zalgofied after the /zalgo")
 
-        @self.client.message_handler(func=lambda message: message.chat.type == 'private')
-        def zalgofy_pm(message: telebot.types.Message):
+        @self.dp.message_handler(lambda message: message.chat.type == 'private')
+        async def zalgofy_pm(message: aiogram.types.Message):
             self.logger.log_to_console_and_file("Telegram: PM's")
-            self.client.reply_to(message, self.zalgo_text.zalgofy(message.text))
+            await message.answer(self.zalgo_text.zalgofy(message.text))
 
-        @self.client.inline_handler(func=lambda query: len(query.query) > 0)
-        def zalgofy_inline(query: telebot.types.InlineQuery):
+        @self.dp.inline_handler(lambda query: len(query.query) > 0)
+        async def zalgofy_inline(query: aiogram.types.InlineQuery):
             self.logger.log_to_console_and_file("Telegram: Inline")
             zalgofied_text = self.zalgo_text.zalgofy(query.query)
-            answer = telebot.types.InlineQueryResultArticle('1', zalgofied_text,
-                                                            telebot.types.InputTextMessageContent(zalgofied_text))
-            self.client.answer_inline_query(query.id, [answer])
+            answer = aiogram.types.InlineQueryResultArticle(id='1', title=zalgofied_text,
+                                                            input_message_content=aiogram.types.InputTextMessageContent(
+                                                                zalgofied_text))
+            await query.answer([answer])
 
     def run(self):
-        self.client.infinity_polling()
+        aiogram.executor.start_polling(self.dp)
