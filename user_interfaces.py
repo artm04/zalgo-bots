@@ -1,11 +1,10 @@
-from threading import Thread
 from abc import ABC, abstractmethod
 import discord
 import aiogram
 from zalgo import ZalgoText
 
 
-class UserInterface(Thread, ABC):
+class UserInterface(ABC):
 
     def __init__(self, logger, zalgo_text: ZalgoText, token: str):
         super().__init__()
@@ -16,9 +15,6 @@ class UserInterface(Thread, ABC):
     @abstractmethod
     def run(self):
         pass
-
-    def polling(self):
-        self.start()
 
 
 class DiscordInterface(UserInterface):
