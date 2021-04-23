@@ -43,8 +43,8 @@ class DiscordInterface(UserInterface):
                 self.logger.log_to_console_and_file("Discord: PM's")
                 await message.channel.send(self.zalgo_text.zalgofy(message.content))
 
-    def run(self):
-        self.client.run(self.token)
+    async def run(self):
+        await self.client.start(self.token)
 
 
 class TelegramInterface(UserInterface):
@@ -58,8 +58,8 @@ class TelegramInterface(UserInterface):
         async def zalgofy(message: aiogram.types.Message):
             self.logger.log_to_console_and_file("Telegram: /zalgo")
 
-            if len(message.get_full_command()) > 1:
-                source = message.get_args()
+            source = message.get_args()
+            if source:
                 await message.answer(self.zalgo_text.zalgofy(source))
             else:
                 await message.answer("Write text to be zalgofied after the /zalgo")
@@ -78,5 +78,5 @@ class TelegramInterface(UserInterface):
                                                                 zalgofied_text))
             await query.answer([answer])
 
-    def run(self):
-        aiogram.executor.start_polling(self.dp)
+    async def run(self):
+        await self.dp.start_polling()
