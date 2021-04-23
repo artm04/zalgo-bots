@@ -1,6 +1,8 @@
+import asyncio
+from asyncio.tasks import run_coroutine_threadsafe
 import json
 from os.path import exists
-from user_interfaces import DiscordInterface, TelegramInterface
+from user_interfaces import DiscordInterface, TelegramInterface, UserInterface
 
 
 class TokenReader:
@@ -30,17 +32,25 @@ class InterfacesFactory:
         self.telegram_tokens = tokens["telegram"]
         self.discord_tokens = tokens["discord"]
 
-    def __create_interfaces(self, logger, zalgo_text):
+    def __create_interfaces(self, logger, zalgo_text) -> list[UserInterface]:
+        bots = []
         for telegram_token in self.telegram_tokens:
-            telegram_bot = TelegramInterface(logger, zalgo_text, telegram_token)
-            telegram_bot.start()
+            bots.append(TelegramInterface(logger, zalgo_text, telegram_token))
         for discord_token in self.discord_tokens:
-            discord_bot = DiscordInterface(logger, zalgo_text, discord_token)
-            discord_bot.start()
+            bots.append(DiscordInterface(logger, zalgo_text, discord_token))
+        return bots
+    
+    def __start_interfaces(self, logger, zalgo_text):
+        bots = self.__create_interfaces(logger, zalgo_text)
+        run_coroutines = map(lambda bot: bot.run(), bots)
+        loop = asyncio.get_event_loop()
+        asyncio.gather(*run_coroutines)
+        loop.run_forever()
+
 
     def run(self, token_reader: TokenReader, logger, zalgo_text):
         self.__read_tokens(token_reader)
-        self.__create_interfaces(logger, zalgo_text)
+        self.__start_interfaces(logger, zalgo_text)
 
 
 
