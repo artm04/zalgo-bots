@@ -58,8 +58,8 @@ class TelegramInterface(UserInterface):
         async def zalgofy(message: aiogram.types.Message):
             self.logger.log_to_console_and_file("Telegram: /zalgo")
 
-            if len(message.get_full_command()) > 1:
-                source = message.get_args()
+            source = message.get_args()
+            if source:
                 await message.answer(self.zalgo_text.zalgofy(source))
             else:
                 await message.answer("Write text to be zalgofied after the /zalgo")
