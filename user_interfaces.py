@@ -25,7 +25,8 @@ class DiscordInterface(UserInterface):
 
         @self.client.event
         async def on_ready():
-            self.logger.log_to_console_and_file('We have logged in as {0.user}'.format(self.client))
+            self.logger.log_to_console_and_file(
+                'We have logged in as {0.user}'.format(self.client))
 
         @self.client.event
         async def on_message(message):

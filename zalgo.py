@@ -20,7 +20,8 @@ class ZalgoText:
                 start = i
                 while i < length:
                     if text[i] == "]":
-                        text = text.replace(text[start: i + 1], self.convert_to_zalgo(text[start + 1: i]))
+                        text = text.replace(
+                            text[start: i + 1], self.convert_to_zalgo(text[start + 1: i]))
                     i += 1
             i += 1
         return text

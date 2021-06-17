@@ -5,6 +5,7 @@ import time
 
 class Logger:
     """Class for logging"""
+
     def __init__(self):
         self.log_file = "logs.txt"
         self.gmt = 3
