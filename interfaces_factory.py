@@ -11,7 +11,8 @@ class TokenReader:
     def get_tokens() -> dict:
         if not exists("tokens.json"):
             with open("tokens.json", "w", encoding='utf-8') as file:
-                json.dump({"telegram": [], "discord": []}, file, ensure_ascii=False, indent=4)
+                json.dump({"telegram": [], "discord": []},
+                          file, ensure_ascii=False, indent=4)
         with open("tokens.json", "r", encoding='utf-8') as file:
             tokens_dict = json.load(file)
         if not tokens_dict["telegram"] and not tokens_dict["discord"]:
@@ -39,7 +40,7 @@ class InterfacesFactory:
         for discord_token in self.discord_tokens:
             bots.append(DiscordInterface(logger, zalgo_text, discord_token))
         return bots
-    
+
     def __start_interfaces(self, logger, zalgo_text):
         bots = self.__create_interfaces(logger, zalgo_text)
         run_coroutines = map(lambda bot: bot.run(), bots)
