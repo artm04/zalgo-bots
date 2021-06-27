@@ -76,7 +76,7 @@ class TelegramInterface(UserInterface):
             zalgofied_text = self.zalgo_text.zalgofy(query.query)
             answer = aiogram.types.InlineQueryResultArticle(id='1', title=zalgofied_text,
                                                             input_message_content=aiogram.types.InputTextMessageContent(
-                                                                zalgofied_text))
+                                                                zalgofied_text, cache_time=0))
             await query.answer([answer])
 
     async def run(self):
