@@ -25,7 +25,8 @@ class DiscordInterface(UserInterface):
 
         @self.client.event
         async def on_ready():
-            self.logger.log_to_console_and_file('We have logged in as {0.user}'.format(self.client))
+            self.logger.log_to_console_and_file(
+                'We have logged in as {0.user}'.format(self.client))
 
         @self.client.event
         async def on_message(message):
@@ -76,7 +77,7 @@ class TelegramInterface(UserInterface):
             answer = aiogram.types.InlineQueryResultArticle(id='1', title=zalgofied_text,
                                                             input_message_content=aiogram.types.InputTextMessageContent(
                                                                 zalgofied_text))
-            await query.answer([answer])
+            await query.answer([answer], cache_time=0)
 
     async def run(self):
         await self.dp.start_polling()
