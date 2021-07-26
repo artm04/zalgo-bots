@@ -42,9 +42,9 @@ class InterfacesFactory:
     
     def __start_interfaces(self, logger, zalgo_text):
         bots = self.__create_interfaces(logger, zalgo_text)
-        run_coroutines = map(lambda bot: bot.run(), bots)
         loop = asyncio.get_event_loop()
-        asyncio.gather(*run_coroutines)
+        for bot in bots:
+            loop.create_task(bot.run())
         loop.run_forever()
 
     def run(self, token_reader: TokenReader, logger, zalgo_text):
