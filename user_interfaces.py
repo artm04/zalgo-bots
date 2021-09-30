@@ -9,7 +9,7 @@ class UserInterface(ABC):
                    'Options for zalgofying:\n' \
                    '1. Type /zalgo <your text to zalgofy>\n' \
                    '2. Type any text in DM with me\n' \
-                   '2. Type /zalgo as a reply to message with text to zalgofy (Telegram only)'
+                   '3. Type /zalgo as a reply to message with text to zalgofy (Telegram only)'
 
     def __init__(self, logger, zalgo_text: ZalgoText, token: str):
         super().__init__()
