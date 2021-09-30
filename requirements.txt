@@ -1,0 +1,3 @@
+zalgo_text==0.6
+discord.py==1.7.3
+aiogram==2.15
