@@ -5,6 +5,11 @@ from zalgo import ZalgoText
 
 
 class UserInterface(ABC):
+    help_message = 'Type /start or /help to show this message.\n\n' \
+                   'Options for zalgofying:\n' \
+                   '1. Type /zalgo <your text to zalgofy>\n' \
+                   '2. Type any text in DM with me\n' \
+                   '2. Type /zalgo as a reply to message with text to zalgofy (Telegram only)'
 
     def __init__(self, logger, zalgo_text: ZalgoText, token: str):
         super().__init__()
@@ -44,6 +49,10 @@ class DiscordInterface(UserInterface):
                 self.logger.log_to_console_and_file("Discord: PM's")
                 await message.channel.send(self.zalgo_text.zalgofy(message.content))
 
+            elif message.content.startswith("/help"):
+                self.logger.log_to_console_and_file("Discord: /help")
+                await message.channel.send(self.help_message)
+
     async def run(self):
         await self.client.start(self.token)
 
@@ -54,6 +63,17 @@ class TelegramInterface(UserInterface):
         super().__init__(logger, zalgo_text, token)
         self.client = aiogram.Bot(token)
         self.dp = aiogram.Dispatcher(self.client)
+
+        @self.dp.message_handler(commands=['start'])
+        async def start(message: aiogram.types.Message):
+            self.logger.log_to_console_and_file("Telegram: /start")
+            await message.answer("Hello there! Type /help to know how to use me.\n"
+                                 "F E E L  F R E E T O  A B U S E  T H I S  W O R L D.(c)@@%!&")
+
+        @self.dp.message_handler(commands=['help'])
+        async def helper(message: aiogram.types.Message):
+            self.logger.log_to_console_and_file("Telegram: /help")
+            await message.answer(self.help_message)
 
         @self.dp.message_handler(commands=['zalgo'])
         async def zalgofy(message: aiogram.types.Message):
